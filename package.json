@@ -1,0 +1,25 @@
+{
+  "name": "painfull",
+  "version": "1.0.0",
+  "description": "The modular Discord bot Full of Pain.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LITdevs/painfull.git"
+  },
+  "author": "LIT Devs",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/LITdevs/painfull/issues"
+  },
+  "homepage": "https://github.com/LITdevs/painfull#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "discord.js": "^13.3.1",
+    "dotenv": "^10.0.0",
+    "ora": "^5.4.1"
+  }
+}
