@@ -1,0 +1,8 @@
+{
+    "name": "core",
+    "version": "1.0.0",
+    "author": "LIT Devs",
+    "entrypoints": {
+        "install": "src/install.js"
+    }
+}
