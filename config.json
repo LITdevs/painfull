@@ -1,7 +1,6 @@
 {
     "enabledModules": [
-        "example-module",
-        "say"
+        "example-module"
     ],
     "prefix": "v!",
     "owners": [

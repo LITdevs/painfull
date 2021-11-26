@@ -24,13 +24,18 @@ async function installModule(moduleName) {
 	} else {
 		downloadSpinner.text = `Installing ${moduleName}...`;
 		let gitClone;
-		if(!moduleName.includes("git://")) { //that spaghetti mess should figure out what user/org to look under, not too sure on the split substr part tho lololol
+		try {
+			if(!moduleName.includes("git://")) { //that spaghetti mess should figure out what user/org to look under, not too sure on the split substr part tho lololol
 			gitClone = execSync(`cd ${__dirname}\\modules && git clone https://github.com/${!moduleName.includes("@") ? "painfull-community" : moduleName.split("/")[0].substr(1)}/${moduleName}`) // we should probably uh... create a modules folder before this? would you mind doign that
-		} else {
-			gitClone = execSync(`cd ${__dirname}\\modules && git clone ${moduleName}`)
-		}                                                                                                                   // VVVV WELL FIX IT I HAVE NO IDEA HOW THIS WORKS AT ALL LOL
-		execSync(`cd ${__dirname}\\modules\\${!moduleName.includes("@") && moduleName.includes("git://") ? moduleName : moduleName.includes("git://") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName.includes("@") ? moduleName.split("/")[1] : moduleName} && npm install`)
-		if (validateModule(moduleName)) modulesToLoad.push(moduleName)
+			} else {
+				gitClone = execSync(`cd ${__dirname}\\modules && git clone ${moduleName}`)
+			}                                                                                                                   // VVVV WELL FIX IT I HAVE NO IDEA HOW THIS WORKS AT ALL LOL
+			execSync(`cd ${__dirname}\\modules\\${!moduleName.includes("@") && moduleName.includes("git://") ? moduleName : moduleName.includes("git://") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName.includes("@") ? moduleName.split("/")[1] : moduleName} && npm install`)
+			if (validateModule(moduleName)) modulesToLoad.push(moduleName)
+		} catch (error) {
+			console.log(error)
+			moduleFailed(moduleName);
+		}
 	}
 }
 
@@ -116,6 +121,18 @@ function loadModule(moduleName, isCore) {
 	});
 }
 
+function uninstallModule(moduleName) {
+	let moduleFolder = `${__dirname}/modules/${moduleName}`
+	let moduleManifest = require(`${__dirname}/modules/${moduleName}/manifest.json`)
+	Object.entries(moduleManifest.entrypoints).forEach(entrypoint => { // gjsadkgjsdk forget it
+		let [commandName, _commandPath] = entrypoint;
+		client.commands.delete(commandName);
+	});
+	if(fs.existsSync(moduleFolder)) {
+		fs.rmSync(moduleFolder, { recursive: true })
+	}
+}
+
 var modulesProcessed = 0
 let downloadSpinner = ora(`Downloading and validating modules...`).start();
 config.enabledModules.forEach(async module =>  {
@@ -158,7 +175,6 @@ client.on('messageCreate', message => {
 	const command = args.shift().toLowerCase();
 
 	if (!client.commands.has(command)) return message.reply('that command does not exist!');
-    if (command.ownerOnly && !config.owners.includes(message.author.id)) return message.reply('you do not have permission to use this command!');
 
 	try {
 		client.commands.get(command).execute(message, args, { client: client }); // lmfao
@@ -186,5 +202,6 @@ client.login(process.env.BOT_TOKEN);
 
 module.exports = {
     installModule,
+	uninstallModule,
     loadModule
 }

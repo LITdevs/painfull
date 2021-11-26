@@ -10,9 +10,9 @@ function parseModuleName(moduleName) {
     }
 }
 module.exports = {
-    ownerOnly: true,
     execute: async function(message, args) {
         const config = require("../../../config.json"); // pee pee poo poo gugu gaga
+        if(!config.owners.includes(message.author.id)) return message.reply("You can't do that bro.");
         const { installModule, loadModule } = require("../../index.js");
         // installing module...
         moduleName = parseModuleName(args[0])
@@ -22,16 +22,15 @@ module.exports = {
         await message.reply("Installing module...");
         try {
             await installModule(moduleName);
-            // loading module...
-            await message.reply("Loading module...");
             loadModule(moduleName, false);
             message.reply("Module installed!"); //what's a permission check! just kidding
             config.enabledModules.push(moduleName)
-            fs.writeFile("../../../config.json", JSON.stringify(config, null, 4), function writeJSON(err) {
+            require("fs").writeFile(`${__dirname}/../../../config.json`, JSON.stringify(config, null, 4), function writeJSON(err) {
                 if (err) return console.log(err);
             });
         } catch (err) {
             message.reply("Something went wrong during module installation.");
+            console.log(err);
         }
     }
 }

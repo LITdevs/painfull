@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "author": "LIT Devs",
     "entrypoints": {
-        "install": "src/install.js"
+        "install": "src/install.js",
+        "uninstall": "src/uninstall.js"
     }
 }
