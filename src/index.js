@@ -174,9 +174,7 @@ config.enabledModules.forEach(async module =>  {
 		downloadSpinner.succeed("Modules downloaded!");
 		let installSpinner = ora("Initializing modules...").start();
 		modulesToLoad.forEach(async moduleName =>  {
-			console.log("WHAT THE FUCK2 !! "+ moduleName)
 			var moduleName = moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName
-			console.log("WHAT THE FUCK!! "+ moduleName)
 			installSpinner.text = `Initializing ${moduleName}...`; // to see if it happens. bajillon spinners
 			loadModule(moduleName, false)
 		});
