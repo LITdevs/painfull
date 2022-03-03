@@ -2,9 +2,8 @@
     "enabledModules": [
         "example-module"
     ],
-    "prefix": "v!",
+    "prefix": "s!",
     "owners": [
-        "708333380525228082",
         "125644326037487616"
     ]
 }
