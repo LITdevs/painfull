@@ -13,20 +13,20 @@ client.commands = new Collection();
 console.clear();
 console.log(chalk.greenBright("Painfull"));
 var modulesToLoad = []
-
+let apis = {}
 async function installModule(moduleName) {
 	//Check for installed module, and validate existance of all required files (All entrypoints, apis along with package.json and manifest.json)
 	if (!fs.existsSync(`${__dirname}/modules/`)){
 		fs.mkdirSync(`${__dirname}/modules/`);
 	}
-	if (fs.existsSync(`${__dirname}/modules/${moduleName}`)) {
-		if (validateModule(moduleName)) modulesToLoad.push(moduleName)
+	if (fs.existsSync(`${__dirname}/modules/${moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName}`)) {
+		if (validateModule(moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName)) modulesToLoad.push(moduleName)
 	} else {
 		downloadSpinner.text = `Installing ${moduleName}...`;
 		let gitClone;
 		try {
 			if(!moduleName.includes("git://")) { //that spaghetti mess should figure out what user/org to look under, not too sure on the split substr part tho lololol
-			gitClone = execSync(`cd ${__dirname}\\modules && git clone https://github.com/${!moduleName.includes("@") ? "painfull-community" : moduleName.split("/")[0].substr(1)}/${moduleName}`) // we should probably uh... create a modules folder before this? would you mind doign that
+			gitClone = execSync(`cd ${__dirname}\\modules && git clone https://github.com/${!moduleName.includes("@") ? "painfull-community" : moduleName.split("/")[0].substr(1)}/${moduleName.includes("@") ? moduleName.split("/")[1] : moduleName}`) // we should probably uh... create a modules folder before this? would you mind doign that
 			} else {
 				gitClone = execSync(`cd ${__dirname}\\modules && git clone ${moduleName}`)
 			}                                                                                                                   // VVVV WELL FIX IT I HAVE NO IDEA HOW THIS WORKS AT ALL LOL
@@ -105,21 +105,24 @@ function validateManifest(moduleFolder) {
 	if(painVersions[2] < minVersions[2] && painVersions[1] <= minVersions[1] && painVersions[0] <= minVersions[0]) bootDMs.push("7 module does not support this version of pain:" + moduleName)
 	if(painVersions[2] < minVersions[2] && painVersions[1] <= minVersions[1] && painVersions[0] <= minVersions[0]) return false
 	let validEvents = ["apiRequest", "apiResponse", "applicationCommandCreate", "applicationCommandDelete", "applicationCommandUpdate", "channelCreate", "channelDelete", "channelPinsUpdate", "channelUpdate", "debug", "emojiCreate", "emojiDelete", "emojiUpdate", "error", "guildBanAdd", "guildBanRemove", "guildCreate", "guildDelete", "guildIntegrationsUpdate", "guildMemberAdd", "guildMemberAvailable", "guildMemberRemove", "guildMembersChunk", "guildMemberUpdate", "guildScheduledEventCreate", "guildScheduledEventDelete", "guildScheduledEventUpdate", "guildScheduledEventUserAdd", "guildScheduledEventUserRemove", "guildUnavailable", "guildUpdate", "interaction", "interactionCreate", "invalidated", "invalidRequestWarning", "inviteCreate", "inviteDelete", "message", "messageCreate", "messageDelete", "messageDeleteBulk", "messageReactionAdd", "messageReactionRemove", "messageReactionRemoveAll", "messageReactionRemoveEmoji", "messageUpdate", "presenceUpdate", "rateLimit", "ready", "roleCreate", "roleDelete", "roleUpdate", "shardDisconnect", "shardError", "shardReady", "shardReconnecting", "shardResume", "stageInstanceCreate", "stageInstanceDelete", "stageInstanceUpdate", "stickerCreate", "stickerDelete", "stickerUpdate", "threadCreate", "threadDelete", "threadListSync", "threadMembersUpdate", "threadMemberUpdate", "threadUpdate", "typingStart", "userUpdate", "voiceStateUpdate", "warn", "webhookUpdate"]
-	for (let i = 0; i < manifest.eventHandlers.length; i++) {
-		if(!validEvents.includes(manifest.eventHandlers[i])) bootDMs.push("invalid event handler in module:" + moduleName)
-		if(!validEvents.includes(manifest.eventHandlers[i])) return false
+	if (manifest.eventHandlers) {
+		for (let i = 0; i < manifest.eventHandlers.length; i++) {
+			if(!validEvents.includes(manifest.eventHandlers[i])) bootDMs.push("invalid event handler in module:" + moduleName)
+			if(!validEvents.includes(manifest.eventHandlers[i])) return false
+		}
 	}
 	return true //shut up shut up shut up shut up shut up i did not forget i didnt i didnt dfjaoiwjefoiajwpfwwwwwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfwfw
 }
 
 function loadModule(moduleName, isCore) {
 	var moduleManifest
-	if (!isCore) moduleManifest = require(`${__dirname}/modules/${moduleName}/manifest.json`)
+	let parsedModuleName = moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName
+	if (!isCore) moduleManifest = require(`${__dirname}/modules/${parsedModuleName}/manifest.json`)
 	if (isCore) moduleManifest = require(`${__dirname}/core/manifest.json`)
 	Object.entries(moduleManifest.entrypoints).forEach(entrypoint => { // gjsadkgjsdk forget it
 		let [commandName, commandPath] = entrypoint;
 		let command
-		if (!isCore) command = require(`${__dirname}/modules/${moduleName}/${commandPath}`); // yay?
+		if (!isCore) command = require(`${__dirname}/modules/${parsedModuleName}/${commandPath}`); // yay?
 		if (isCore) command = require(`${__dirname}/core/${commandPath}`);
 		let validEvents = ["apiRequest", "apiResponse", "applicationCommandCreate", "applicationCommandDelete", "applicationCommandUpdate", "channelCreate", "channelDelete", "channelPinsUpdate", "channelUpdate", "debug", "emojiCreate", "emojiDelete", "emojiUpdate", "error", "guildBanAdd", "guildBanRemove", "guildCreate", "guildDelete", "guildIntegrationsUpdate", "guildMemberAdd", "guildMemberAvailable", "guildMemberRemove", "guildMembersChunk", "guildMemberUpdate", "guildScheduledEventCreate", "guildScheduledEventDelete", "guildScheduledEventUpdate", "guildScheduledEventUserAdd", "guildScheduledEventUserRemove", "guildUnavailable", "guildUpdate", "interaction", "interactionCreate", "invalidated", "invalidRequestWarning", "inviteCreate", "inviteDelete", "message", "messageCreate", "messageDelete", "messageDeleteBulk", "messageReactionAdd", "messageReactionRemove", "messageReactionRemoveAll", "messageReactionRemoveEmoji", "messageUpdate", "presenceUpdate", "rateLimit", "ready", "roleCreate", "roleDelete", "roleUpdate", "shardDisconnect", "shardError", "shardReady", "shardReconnecting", "shardResume", "stageInstanceCreate", "stageInstanceDelete", "stageInstanceUpdate", "stickerCreate", "stickerDelete", "stickerUpdate", "threadCreate", "threadDelete", "threadListSync", "threadMembersUpdate", "threadMemberUpdate", "threadUpdate", "typingStart", "userUpdate", "voiceStateUpdate", "warn", "webhookUpdate"]
 		if(command.registerEventHandlers) {
@@ -129,6 +132,8 @@ function loadModule(moduleName, isCore) {
 				if(!validEvents.includes(eventName)) return
 				if(addedHandlers.includes(eventName)) bootDMs.push("duplicate event handler in module:" + moduleName)
 				if(addedHandlers.includes(eventName)) return
+				if(!moduleManifest.eventHandlers) bootDMs.push("undeclared event handler in module:" + moduleName)
+				if(!moduleManifest.eventHandlers) return
 				if(!moduleManifest.eventHandlers.includes(eventName)) bootDMs.push("undeclared event handler in module:" + moduleName)
 				if(!moduleManifest.eventHandlers.includes(eventName)) return
 				addedHandlers.push(eventName)
@@ -136,6 +141,14 @@ function loadModule(moduleName, isCore) {
 			})
 		}
 		client.commands.set(commandName, command);
+	});
+	if (!moduleManifest.apis) return;
+	Object.entries(moduleManifest.apis).forEach(api => { 
+		let [apiName, apiPath] = api;
+		let apif
+		if (!isCore) apif = require(`${__dirname}/modules/${parsedModuleName}/${apiPath}`); // yay?
+		if (isCore) apif = require(`${__dirname}/core/${apiPath}`);
+		apis[`${parsedModuleName}-${apiName}`] = apif;
 	});
 
 }
@@ -161,7 +174,9 @@ config.enabledModules.forEach(async module =>  {
 		downloadSpinner.succeed("Modules downloaded!");
 		let installSpinner = ora("Initializing modules...").start();
 		modulesToLoad.forEach(async moduleName =>  {
-			var moduleName = !moduleName.includes("@") && moduleName.includes("git://") ? moduleName : moduleName.includes("git://") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName.includes("@") ? moduleName.split("/")[1] : moduleName
+			console.log("WHAT THE FUCK2 !! "+ moduleName)
+			var moduleName = moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName
+			console.log("WHAT THE FUCK!! "+ moduleName)
 			installSpinner.text = `Initializing ${moduleName}...`; // to see if it happens. bajillon spinners
 			loadModule(moduleName, false)
 		});
@@ -196,7 +211,7 @@ client.on('messageCreate', message => {
 	if (!client.commands.has(command)) return message.reply('that command does not exist!');
 
 	try {
-		client.commands.get(command).execute(message, args, { client: client }); // lmfao
+		client.commands.get(command).execute(message, args, { client: client, apis: apis }); // lmfao
 	} catch (error) {
 		console.error(error);
 		message.reply('there was an error trying to execute that command!');

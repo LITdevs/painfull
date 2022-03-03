@@ -1,9 +1,11 @@
 {
     "enabledModules": [
-        "example-module"
+        "say",
+        "@sharkpain/shark-db"
     ],
     "prefix": "s!",
     "owners": [
-        "125644326037487616"
+        "125644326037487616",
+        "453924399402319882"
     ]
 }

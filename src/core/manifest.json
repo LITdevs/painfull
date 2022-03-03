@@ -4,6 +4,7 @@
     "author": "LIT Devs",
     "entrypoints": {
         "install": "src/install.js",
+        "test": "src/test.js",
         "uninstall": "src/uninstall.js"
     }
 }
