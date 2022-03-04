@@ -1,5 +1,6 @@
 var config = require('../../../config.json');
-function error (error, client) {
+var client = require('../../index').client;
+function error (error) {
     let bootDMs = [];
     bootDMs.push(`The bot ran into an error, \n\`\`\`${error}\`\`\``);
     bootDMs.forEach(dm => {

@@ -236,5 +236,6 @@ module.exports = {
     installModule,
 	uninstallModule,
     loadModule,
-	apis
+	apis,
+	client
 }

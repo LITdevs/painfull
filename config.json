@@ -3,8 +3,7 @@
         "say",
         "@sharkpain/shark-db",
         "@sharkpain/ownertime",
-        "@sharkpain/accountinfo",
-        "say"
+        "@sharkpain/accountinfo"
     ],
     "prefix": "s!",
     "owners": [
