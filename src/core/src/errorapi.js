@@ -1,5 +1,10 @@
 var config = require('../../../config.json');
-var client = require('../../index').client;
+var client
+
+function init(dclient) {
+	client = dclient;
+} 
+
 function error (error) {
     let bootDMs = [];
     bootDMs.push(`The bot ran into an error, \n\`\`\`${error}\`\`\``);
@@ -12,5 +17,6 @@ function error (error) {
 	});
 }
 module.exports = {
-    api: {error}
+    api: {error},
+	init
 }

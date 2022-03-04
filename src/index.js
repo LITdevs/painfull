@@ -232,10 +232,11 @@ client.once('ready', () => {
 
 client.login(process.env.BOT_TOKEN);
 
+apis["core-error"].init(client)
+
 module.exports = {
     installModule,
 	uninstallModule,
     loadModule,
-	apis,
-	client
+	apis
 }
