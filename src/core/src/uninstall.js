@@ -7,6 +7,13 @@ module.exports = {
             await message.reply("Uninstalling module...");
             await uninstallModule(args[0]);
             const index = config.enabledModules.indexOf(args[0]);
+            if (index == -1) {
+                for (let i = 0; i < config.enabledModules.length; i++) {
+                    if (config.enabledModules[i].split("/")[config.enabledModules[i].split("/").length] == args[0]) {
+                        index = config.enabledModules.indexOf(config.enabledModules[i]);
+                    }
+                }
+            }
             if (index > -1) {
                 config.enabledModules.splice(index, 1);
             }
