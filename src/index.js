@@ -235,5 +235,6 @@ client.login(process.env.BOT_TOKEN);
 module.exports = {
     installModule,
 	uninstallModule,
-    loadModule
+    loadModule,
+	apis
 }
