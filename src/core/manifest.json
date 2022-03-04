@@ -6,5 +6,8 @@
         "install": "src/install.js",
         "test": "src/test.js",
         "uninstall": "src/uninstall.js"
+    },
+    "apis": {
+        "error": "src/errorapi.js"
     }
 }

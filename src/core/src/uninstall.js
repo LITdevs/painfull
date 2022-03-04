@@ -6,11 +6,11 @@ module.exports = {
         try {
             await message.reply("Uninstalling module...");
             await uninstallModule(args[0]);
-            const index = config.enabledModules.indexOf(args[0]);
+            let index = config.enabledModules.indexOf(args[0]);
             if (index == -1) {
                 for (let i = 0; i < config.enabledModules.length; i++) {
-                    if (config.enabledModules[i].split("/")[config.enabledModules[i].split("/").length] == args[0]) {
-                        index = config.enabledModules.indexOf(config.enabledModules[i]);
+                    if (config.enabledModules[i].split("/")[config.enabledModules[i].split("/").length - 1] == args[0]) {
+                        index = i
                     }
                 }
             }

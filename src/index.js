@@ -8,7 +8,7 @@ const pjson = require("../package.json")
 require("dotenv").config();
 let spinner;
 let bootDMs = [];
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
 client.commands = new Collection();
 console.clear();
 console.log(chalk.greenBright("Painfull"));
