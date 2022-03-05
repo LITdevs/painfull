@@ -167,6 +167,7 @@ function uninstallModule(moduleName) {
 
 var modulesProcessed = 0
 let downloadSpinner = ora(`Downloading and validating modules...`).start();
+loadModule("core", true)
 config.enabledModules.forEach(async module =>  {
 	await installModule(module);
 	modulesProcessed++
@@ -181,7 +182,6 @@ config.enabledModules.forEach(async module =>  {
 		installSpinner.succeed("Modules initialized!");
 	}
 });
-loadModule("core", true)
 
 spinner = ora("Connecting to Discord...").start();
 
@@ -198,7 +198,7 @@ client.on('messageCreate', message => {
 	}
 
 	if(message.content == "please give me the commands") {
-		message.reply("ok here:" + JSON.stringify(client.commands.toJSON()));
+		message.reply("ok here:" + JSON.stringify(JSON.parse(JSON.stringify(client)).commands));
 	} //adding new commands t;he old school way
 
 	if (!message.content.startsWith(config.prefix) || message.author.bot) return;
