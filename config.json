@@ -1,7 +1,7 @@
 {
     "enabledModules": [
-        "say",
         "@sharkpain/shark-db",
+        "say",
         "@sharkpain/ownertime",
         "@sharkpain/accountinfo",
         "@sharkpain/shark-perms"
