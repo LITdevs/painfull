@@ -119,6 +119,15 @@ function loadModule(moduleName, isCore) {
 	let parsedModuleName = moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName
 	if (!isCore) moduleManifest = require(`${__dirname}/modules/${parsedModuleName}/manifest.json`)
 	if (isCore) moduleManifest = require(`${__dirname}/core/manifest.json`)
+	if (moduleManifest.apis) {
+		Object.entries(moduleManifest.apis).forEach(api => { 
+			let [apiName, apiPath] = api;
+			let apif
+			if (!isCore) apif = require(`${__dirname}/modules/${parsedModuleName}/${apiPath}`); // yay?
+			if (isCore) apif = require(`${__dirname}/core/${apiPath}`);
+			apis[`${parsedModuleName}-${apiName}`] = apif;
+		});
+	}
 	Object.entries(moduleManifest.entrypoints).forEach(entrypoint => { // gjsadkgjsdk forget it
 		let [commandName, commandPath] = entrypoint;
 		let command
@@ -142,14 +151,7 @@ function loadModule(moduleName, isCore) {
 		}
 		client.commands.set(commandName, command);
 	});
-	if (!moduleManifest.apis) return;
-	Object.entries(moduleManifest.apis).forEach(api => { 
-		let [apiName, apiPath] = api;
-		let apif
-		if (!isCore) apif = require(`${__dirname}/modules/${parsedModuleName}/${apiPath}`); // yay?
-		if (isCore) apif = require(`${__dirname}/core/${apiPath}`);
-		apis[`${parsedModuleName}-${apiName}`] = apif;
-	});
+	
 
 }
 
