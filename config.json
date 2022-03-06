@@ -4,7 +4,8 @@
         "say",
         "@sharkpain/ownertime",
         "@sharkpain/accountinfo",
-        "@sharkpain/shark-perms"
+        "@sharkpain/shark-perms",
+        "@sharkpain/fr"
     ],
     "prefix": "s!",
     "owners": [
