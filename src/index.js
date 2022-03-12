@@ -23,13 +23,13 @@ async function installModule(moduleName) {
 		if (validateModule(moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName)) modulesToLoad.push(moduleName)
 	} else {
 		downloadSpinner.text = `Installing ${moduleName}...`;
-		let gitClone;
 		try {
-			if(!moduleName.includes("git://")) { //that spaghetti mess should figure out what user/org to look under, not too sure on the split substr part tho lololol
+			let gitClone;
+			if(!moduleName.includes("git://")) { 
 			gitClone = execSync(`cd ${__dirname}\\modules && git clone https://github.com/${!moduleName.includes("@") ? "painfull-community" : moduleName.split("/")[0].substr(1)}/${moduleName.includes("@") ? moduleName.split("/")[1] : moduleName}`) // we should probably uh... create a modules folder before this? would you mind doign that
 			} else {
 				gitClone = execSync(`cd ${__dirname}\\modules && git clone ${moduleName}`)
-			}                                                                                                                   // VVVV WELL FIX IT I HAVE NO IDEA HOW THIS WORKS AT ALL LOL
+			}
 			execSync(`cd ${__dirname}\\modules\\${!moduleName.includes("@") && moduleName.includes("git://") ? moduleName : moduleName.includes("git://") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName.includes("@") ? moduleName.split("/")[1] : moduleName} && npm install`)
 			if (validateModule(moduleName)) modulesToLoad.push(moduleName)
 		} catch (error) {
@@ -46,13 +46,15 @@ function moduleFailed(moduleName) {
 function validateModule(moduleName) {
 	downloadSpinner.text = `Validating ${moduleName}...`;
 
-	let moduleFolder = `${__dirname}/modules/${moduleName}`
+	let moduleFolder = `${__dirname}/modules/${moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName}`
 	const manifestExists = fs.existsSync(moduleFolder + "/manifest.json") // i a mdead
 	if(manifestExists) {
 		if (!validateManifest(moduleFolder)) {
 			return moduleFailed(moduleName);
 		}
 	}
+	if(!manifestExists) bootDMs.push("manifest.json missing in module:" + moduleName);
+	if(!manifestExists) return false;
 	const packageJsonExists = fs.existsSync(moduleFolder + "/package.json")
 	if(!packageJsonExists) bootDMs.push("package.json missing in module:" + moduleName);
 	if(!packageJsonExists) return false; //yes, good
