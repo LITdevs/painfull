@@ -26,11 +26,11 @@ async function installModule(moduleName) {
 		try {
 			let gitClone;
 			if(!moduleName.includes("git://")) { 
-			gitClone = execSync(`cd ${__dirname}\\modules && git clone https://github.com/${!moduleName.includes("@") ? "painfull-community" : moduleName.split("/")[0].substr(1)}/${moduleName.includes("@") ? moduleName.split("/")[1] : moduleName}`) // we should probably uh... create a modules folder before this? would you mind doign that
+			gitClone = execSync(`cd ${__dirname}/modules && git clone https://github.com/${!moduleName.includes("@") ? "painfull-community" : moduleName.split("/")[0].substr(1)}/${moduleName.includes("@") ? moduleName.split("/")[1] : moduleName}`) // we should probably uh... create a modules folder before this? would you mind doign that
 			} else {
-				gitClone = execSync(`cd ${__dirname}\\modules && git clone ${moduleName}`)
+				gitClone = execSync(`cd ${__dirname}/modules && git clone ${moduleName}`)
 			}
-			execSync(`cd ${__dirname}\\modules\\${!moduleName.includes("@") && moduleName.includes("git://") ? moduleName : moduleName.includes("git://") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName.includes("@") ? moduleName.split("/")[1] : moduleName} && npm install`)
+			execSync(`cd ${__dirname}/modules/${!moduleName.includes("@") && moduleName.includes("git://") ? moduleName : moduleName.includes("git://") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName.includes("@") ? moduleName.split("/")[1] : moduleName} && npm install`)
 			if (validateModule(moduleName)) modulesToLoad.push(moduleName)
 		} catch (error) {
 			console.log(error)
