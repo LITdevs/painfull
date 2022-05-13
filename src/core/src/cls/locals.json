@@ -37,6 +37,16 @@
                 "error.command.missing": "Den kommandoen finnes ikke!",
                 "error.command.failed": "Det oppstod en feil ved utføring av den kommandoen!"
             }
+        },
+        "vukkyzone": {
+            "en": {
+                "intro": "**Welcome to the Vukky Zone!** (started by <@{0}>)\nReact with ✨ to join the Vukky Zone, or 💥 to close it so no one can enter it anymore."
+            }
+        },
+        "pagepeeker": {
+            "en": {
+                "wait": "Here's a screenshot of that website! It'll take a few seconds to load."
+            }
         }
     }
 }

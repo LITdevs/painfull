@@ -38,10 +38,10 @@ async function installModule(moduleName) {
 			let moduleFolder = `${__dirname}/modules/${moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName}`
 			let manifest = JSON.parse(fs.readFileSync(moduleFolder + "/manifest.json"))
 
+			// If the manifest declares a locals file, make sure it has the correct moduleName, then import it
 			if(manifest.locals) {
 				if (!fs.existsSync(`${moduleFolder}/${manifest.locals}`)) {
-					// hmm
-					bootDMs.push(`Locals missing but defined in module ${moduleName}`); // same
+					bootDMs.push(`Locals missing but defined in module ${moduleName}`);
 				}
 				let moduleLocals = JSON.parse(fs.readFileSync(`${moduleFolder}/${manifest.locals}`))
 				clsImportQueue.push(moduleLocals)
@@ -62,7 +62,7 @@ function validateModule(moduleName) {
 	downloadSpinner.text = `Validating ${moduleName}...`;
 
 	let moduleFolder = `${__dirname}/modules/${moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName}`
-	const manifestExists = fs.existsSync(moduleFolder + "/manifest.json") // i a mdead
+	const manifestExists = fs.existsSync(moduleFolder + "/manifest.json")
 	if(manifestExists) {
 		if (!validateManifest(moduleFolder)) {
 			return moduleFailed(moduleName);
@@ -72,16 +72,20 @@ function validateModule(moduleName) {
 	if(!manifestExists) return false;
 	const packageJsonExists = fs.existsSync(moduleFolder + "/package.json")
 	if(!packageJsonExists) bootDMs.push("package.json missing in module:" + moduleName);
-	if(!packageJsonExists) return false; //yes, good
-
-	let moduleLocals = JSON.parse(fs.readFileSync(`${moduleFolder}/${manifest.locals}`))
-	let parsedName = moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName
-	if(moduleLocals.moduleName != parsedName) {
-		bootDMs.push("Module name mismatch in module:" + moduleName);
-		return false
+	if(!packageJsonExists) return false;
+	
+	let manifest = JSON.parse(fs.readFileSync(moduleFolder + "/manifest.json"))
+	if(manifest.locals) {
+		let moduleLocals = JSON.parse(fs.readFileSync(`${moduleFolder}/${manifest.locals}`))
+		let parsedName = moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName
+		if(moduleLocals.moduleName != parsedName) {
+			bootDMs.push("Module name mismatch in module:" + moduleName);
+			return false
+		}
 	}
+	
 
-	return true //figured it out. i never returned true if it succeeded lmfao
+	return true
 }
 
 function validateManifest(moduleFolder) {
@@ -96,12 +100,12 @@ function validateManifest(moduleFolder) {
 	if(manifest.entrypoints) {
 		for (let i = 0; i < Object.keys(manifest.entrypoints).length; i++) {
 			if(!fs.existsSync(moduleFolder + "/" +  manifest.entrypoints[Object.keys(manifest.entrypoints)[i]])) bootDMs.push("entrypoint missing in module:" + moduleName)
-			if(!fs.existsSync(moduleFolder + "/" +  manifest.entrypoints[Object.keys(manifest.entrypoints)[i]])) return false // what now?
+			if(!fs.existsSync(moduleFolder + "/" +  manifest.entrypoints[Object.keys(manifest.entrypoints)[i]])) return false
 		}
 	}
 	if(manifest.apis) {
 		for (let i = 0; i < Object.keys(manifest.apis).length; i++) {
-			if(!fs.existsSync(moduleFolder + "/" +  manifest.apis[Object.keys(manifest.apis)[i]])) bootDMs.push("api missing in module:" + moduleName) // ok
+			if(!fs.existsSync(moduleFolder + "/" +  manifest.apis[Object.keys(manifest.apis)[i]])) bootDMs.push("api missing in module:" + moduleName)
 			if(!fs.existsSync(moduleFolder + "/" +  manifest.apis[Object.keys(manifest.apis)[i]])) return false
 		}
 	}
@@ -147,15 +151,15 @@ function loadModule(moduleName, isCore) {
 		Object.entries(moduleManifest.apis).forEach(api => { 
 			let [apiName, apiPath] = api;
 			let apif
-			if (!isCore) apif = require(`${__dirname}/modules/${parsedModuleName}/${apiPath}`); // yay?
+			if (!isCore) apif = require(`${__dirname}/modules/${parsedModuleName}/${apiPath}`);
 			if (isCore) apif = require(`${__dirname}/core/${apiPath}`);
 			apis[`${parsedModuleName}-${apiName}`] = apif;
 		});
 	}
-	Object.entries(moduleManifest.entrypoints).forEach(entrypoint => { // gjsadkgjsdk forget it
+	Object.entries(moduleManifest.entrypoints).forEach(entrypoint => {
 		let [commandName, commandPath] = entrypoint;
 		let command
-		if (!isCore) command = require(`${__dirname}/modules/${parsedModuleName}/${commandPath}`); // yay?
+		if (!isCore) command = require(`${__dirname}/modules/${parsedModuleName}/${commandPath}`);
 		if (isCore) command = require(`${__dirname}/core/${commandPath}`);
 		let validEvents = ["apiRequest", "apiResponse", "applicationCommandCreate", "applicationCommandDelete", "applicationCommandUpdate", "channelCreate", "channelDelete", "channelPinsUpdate", "channelUpdate", "debug", "emojiCreate", "emojiDelete", "emojiUpdate", "error", "guildBanAdd", "guildBanRemove", "guildCreate", "guildDelete", "guildIntegrationsUpdate", "guildMemberAdd", "guildMemberAvailable", "guildMemberRemove", "guildMembersChunk", "guildMemberUpdate", "guildScheduledEventCreate", "guildScheduledEventDelete", "guildScheduledEventUpdate", "guildScheduledEventUserAdd", "guildScheduledEventUserRemove", "guildUnavailable", "guildUpdate", "interaction", "interactionCreate", "invalidated", "invalidRequestWarning", "inviteCreate", "inviteDelete", "message", "messageCreate", "messageDelete", "messageDeleteBulk", "messageReactionAdd", "messageReactionRemove", "messageReactionRemoveAll", "messageReactionRemoveEmoji", "messageUpdate", "presenceUpdate", "rateLimit", "ready", "roleCreate", "roleDelete", "roleUpdate", "shardDisconnect", "shardError", "shardReady", "shardReconnecting", "shardResume", "stageInstanceCreate", "stageInstanceDelete", "stageInstanceUpdate", "stickerCreate", "stickerDelete", "stickerUpdate", "threadCreate", "threadDelete", "threadListSync", "threadMembersUpdate", "threadMemberUpdate", "threadUpdate", "typingStart", "userUpdate", "voiceStateUpdate", "warn", "webhookUpdate"]
 		if(command.registerEventHandlers) {
@@ -182,7 +186,7 @@ function loadModule(moduleName, isCore) {
 function uninstallModule(moduleName) {
 	let moduleFolder = `${__dirname}/modules/${moduleName}`
 	let moduleManifest = require(`${__dirname}/modules/${moduleName}/manifest.json`)
-	Object.entries(moduleManifest.entrypoints).forEach(entrypoint => { // gjsadkgjsdk forget it
+	Object.entries(moduleManifest.entrypoints).forEach(entrypoint => {
 		let [commandName, _commandPath] = entrypoint;
 		client.commands.delete(commandName);
 	});
@@ -202,7 +206,7 @@ config.enabledModules.forEach(async module =>  {
 		let installSpinner = ora("Initializing modules...").start();
 		modulesToLoad.forEach(async moduleName =>  {
 			var moduleName = moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName
-			installSpinner.text = `Initializing ${moduleName}...`; // to see if it happens. bajillon spinners
+			installSpinner.text = `Initializing ${moduleName}...`;
 			loadModule(moduleName, false)
 		});
 		installSpinner.succeed("Modules initialized!");
@@ -235,7 +239,7 @@ client.on('messageCreate', message => {
 	if (!client.commands.has(command)) return message.reply(apis["core-cls"].api.getString("core", "error.command.missing"));
 
 	try {
-		client.commands.get(command).execute(message, args, { client: client, apis: apis }); // lmfao
+		client.commands.get(command).execute(message, args, { client: client, apis: apis, CLSimportPending: CLSimportPending });
 	} catch (error) {
 		console.error(error);
 		message.reply(apis["core-cls"].api.getString("core", "error.command.failed"));
@@ -259,12 +263,15 @@ client.once('ready', () => {
 		})
 	});
 	console.log();
-	apis["core-cls"].init()
+	apis["core-cls"].init();
+	CLSimportPending();
+});
+
+function CLSimportPending() {
 	clsImportQueue.forEach(locals => {
 		apis["core-cls"].api.importModule(locals)
 	})
-});
-
+}
 
 client.login(process.env.BOT_TOKEN);
 

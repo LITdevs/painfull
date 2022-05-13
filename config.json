@@ -2,9 +2,10 @@
     "enabledModules": [
         "say",
         "wikipedia",
-        "pagepeeker",
+        "say",
         "vukkyzone",
-        "say"
+        "vukkyzone",
+        "pagepeeker"
     ],
     "prefix": "nb!",
     "owners": [

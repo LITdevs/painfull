@@ -32,6 +32,7 @@ module.exports = {
                     return console.log(err);
                 }
             });
+            utils.CLSimportPending();
         } catch (err) {
             message.reply(cls.getString("core", "install.fail"));
             utils.apis["core-error"].api.error(err); //copilot wrote this, dont trust it!
