@@ -1,11 +1,6 @@
 {
     "enabledModules": [
-        "@sharkpain/shark-db",
-        "say",
-        "@sharkpain/ownertime",
-        "@sharkpain/accountinfo",
-        "@sharkpain/shark-perms",
-        "@sharkpain/fr"
+        "say"
     ],
     "prefix": "s!",
     "owners": [
