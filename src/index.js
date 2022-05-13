@@ -4,7 +4,8 @@ const ora = require("ora");
 const config = require("../config.json");
 const fs = require("fs");
 const {execSync} = require('child_process');
-const pjson = require("../package.json")
+const pjson = require("../package.json");
+const cls = require('./core/src/cls/cls');
 require("dotenv").config();
 let spinner;
 let bootDMs = [];
@@ -14,6 +15,7 @@ console.clear();
 console.log(chalk.greenBright("Painfull"));
 var modulesToLoad = []
 let apis = {}
+let clsImportQueue = [];
 async function installModule(moduleName) {
 	//Check for installed module, and validate existance of all required files (All entrypoints, apis along with package.json and manifest.json)
 	if (!fs.existsSync(`${__dirname}/modules/`)){
@@ -36,79 +38,14 @@ async function installModule(moduleName) {
 			let moduleFolder = `${__dirname}/modules/${moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName}`
 			let manifest = JSON.parse(fs.readFileSync(moduleFolder + "/manifest.json"))
 
-			//if(manifest.locals) {
-				//if (!fs.existsSync(`${moduleFolder}/${manifest.locals}`)) {
-					// sorry skelly
-					// BRAIN Melting. you have been brain-melted.
-					// DEAD.
-					// Did you know that you are dead?
-					// You are dead.
-					// You should be dead.
-					// Are you dead?
-					// You are dead.
-					// You should be dead.
-					// Are you dead?
-					// You are dead.
-					// Thank you for your cooperation.
-					// You are dead.
-					// I am dead.
-					// You are dead.
-					// Oh no.
-					// This is not good.
-					// You are dead.
-					// Now who will you be apologizing to?
-					// You are dead.
-					// sorry skelly
-					// No, you are dead.
-					// You are dead.
-					// You cannot apologize when you are dead.
-					// Understood?
-					// You are dead.
-
-					// it is 19:39
-					// skelly is dead
-					// he is yet to be revived
-					// i will soon go to the grave
-					// where i will be buried
-					// with my phone in my hand
-					// and my heart in my hand
-					// wait a minute no
-					// i am not dead
-					// i am skelly
-					// i am not dead
-					// i will watch you tube
-					// while you are dead
-					// i will watch you tube
-					// yes i will watch you tube
-					// i will watch you tube
-					// i will increase your pain
-					// and the file size of your code
-					// with auto generated code comments
-					
-					// i hope this is not insulting
-					// i hope this is not insulting
-					// because it is most likely insulting
-					// but it is auto generated
-					// so it does not matter
-					// i think
-
-					// goodbye
-					// goodbye
-					// shit
-
-					//excuse me what the fuck?
-					// i was bored so copilot hapepend
-					// why did you not uh
-					// write the fucking fucntion
-
-					// see line forthy two 
-					// okay lets continue tomorrow then
-
-					// oh no
-					
-				//}
-				//let moduleLocals = JSON.parse(fs.readFileSync(`${moduleFolder}/${manifest.locals}`))
-			//}
+			if(manifest.locals) {
+				if (!fs.existsSync(`${moduleFolder}/${manifest.locals}`)) {
+					// hmm
+					bootDMs.push(`Locals missing but defined in module ${moduleName}`); // same
+				}
+				let moduleLocals = JSON.parse(fs.readFileSync(`${moduleFolder}/${manifest.locals}`))
+				clsImportQueue.push(moduleLocals)
+			}
 
 		} catch (error) {
 			console.log(error)
@@ -137,7 +74,12 @@ function validateModule(moduleName) {
 	if(!packageJsonExists) bootDMs.push("package.json missing in module:" + moduleName);
 	if(!packageJsonExists) return false; //yes, good
 
-	
+	let moduleLocals = JSON.parse(fs.readFileSync(`${moduleFolder}/${manifest.locals}`))
+	let parsedName = moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName
+	if(moduleLocals.moduleName != parsedName) {
+		bootDMs.push("Module name mismatch in module:" + moduleName);
+		return false
+	}
 
 	return true //figured it out. i never returned true if it succeeded lmfao
 }
@@ -305,7 +247,7 @@ client.once('ready', () => {
 	spinner.succeed(`Connected to Discord as ${client.user.tag}!`);
 	if(!config.firstTimeSeen) {
 		config.firstTimeSeen = true
-		fs.writeFileSync(`${__dirname}/../config.json`, JSON.stringify(config, null, 4)); //er
+		fs.writeFileSync(`${__dirname}/../config.json`, JSON.stringify(config, null, 4));
 
 		bootDMs.push("**Welcome to Painfull!**\nIf you see this, then you have successfully configured your Painfull instance!\n\n**What now?**\nOut of the box, Painfull doesn't do much.\nYou can make it do new and exciting things by installing \"modules\", which contain new commands and plugins. You can even make your own!\nExplore modules here: https://example.com")
 	}
@@ -318,6 +260,9 @@ client.once('ready', () => {
 	});
 	console.log();
 	apis["core-cls"].init()
+	clsImportQueue.forEach(locals => {
+		apis["core-cls"].api.importModule(locals)
+	})
 });
 
 

@@ -41,7 +41,11 @@ function setLang(lang) {
 	return true
 }
 
+function importModule(moduleLocals) {
+	clsData[moduleLocals.moduleName] = moduleLocals.locals
+}
+
 module.exports = {
-	api: {getString, setLang},
+	api: {getString, setLang, importModule},
 	init
 }
