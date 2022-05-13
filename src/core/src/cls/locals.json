@@ -17,7 +17,8 @@
                 "uninstall.uninstalling": "Uninstalling module...",
                 "uninstall.success": "Module uninstalled!",
                 "uninstall.fail": "Something went wrong during module uninstallation.",
-                "uninstall.no-org": "Please don't specify the organization when uninstalling a module, use only the module name."
+                "uninstall.no-org": "Please don't specify the organization when uninstalling a module, use only the module name.",
+                "lang.success": "Language changed to {0}!"
             },
             "fi": {
                 "error.dm": "Botti kohtasi virheen:",

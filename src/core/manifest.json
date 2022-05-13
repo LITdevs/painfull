@@ -5,7 +5,8 @@
     "entrypoints": {
         "install": "src/install.js",
         "uninstall": "src/uninstall.js",
-        "error": "src/error.js"
+        "error": "src/error.js",
+        "lang": "src/cls/lang.js"
     },
     "apis": {
         "error": "src/errorapi.js",

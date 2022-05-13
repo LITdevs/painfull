@@ -32,6 +32,84 @@ async function installModule(moduleName) {
 			}
 			execSync(`cd ${__dirname}/modules/${!moduleName.includes("@") && moduleName.includes("git://") ? moduleName : moduleName.includes("git://") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName.includes("@") ? moduleName.split("/")[1] : moduleName} && npm install`)
 			if (validateModule(moduleName)) modulesToLoad.push(moduleName)
+			
+			let moduleFolder = `${__dirname}/modules/${moduleName.includes("/") ? moduleName.split("/")[moduleName.split("/").length - 1] : moduleName}`
+			let manifest = JSON.parse(fs.readFileSync(moduleFolder + "/manifest.json"))
+
+			//if(manifest.locals) {
+				//if (!fs.existsSync(`${moduleFolder}/${manifest.locals}`)) {
+					// sorry skelly
+					// BRAIN Melting. you have been brain-melted.
+					// DEAD.
+					// Did you know that you are dead?
+					// You are dead.
+					// You should be dead.
+					// Are you dead?
+					// You are dead.
+					// You should be dead.
+					// Are you dead?
+					// You are dead.
+					// Thank you for your cooperation.
+					// You are dead.
+					// I am dead.
+					// You are dead.
+					// Oh no.
+					// This is not good.
+					// You are dead.
+					// Now who will you be apologizing to?
+					// You are dead.
+					// sorry skelly
+					// No, you are dead.
+					// You are dead.
+					// You cannot apologize when you are dead.
+					// Understood?
+					// You are dead.
+
+					// it is 19:39
+					// skelly is dead
+					// he is yet to be revived
+					// i will soon go to the grave
+					// where i will be buried
+					// with my phone in my hand
+					// and my heart in my hand
+					// wait a minute no
+					// i am not dead
+					// i am skelly
+					// i am not dead
+					// i will watch you tube
+					// while you are dead
+					// i will watch you tube
+					// yes i will watch you tube
+					// i will watch you tube
+					// i will increase your pain
+					// and the file size of your code
+					// with auto generated code comments
+					
+					// i hope this is not insulting
+					// i hope this is not insulting
+					// because it is most likely insulting
+					// but it is auto generated
+					// so it does not matter
+					// i think
+
+					// goodbye
+					// goodbye
+					// shit
+
+					//excuse me what the fuck?
+					// i was bored so copilot hapepend
+					// why did you not uh
+					// write the fucking fucntion
+
+					// see line forthy two 
+					// okay lets continue tomorrow then
+
+					// oh no
+					
+				//}
+				//let moduleLocals = JSON.parse(fs.readFileSync(`${moduleFolder}/${manifest.locals}`))
+			//}
+
 		} catch (error) {
 			console.log(error)
 			moduleFailed(moduleName);
@@ -58,7 +136,9 @@ function validateModule(moduleName) {
 	const packageJsonExists = fs.existsSync(moduleFolder + "/package.json")
 	if(!packageJsonExists) bootDMs.push("package.json missing in module:" + moduleName);
 	if(!packageJsonExists) return false; //yes, good
+
 	
+
 	return true //figured it out. i never returned true if it succeeded lmfao
 }
 
@@ -210,13 +290,13 @@ client.on('messageCreate', message => {
 	const args = message.content.slice(config.prefix.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
 
-	if (!client.commands.has(command)) return message.reply(apis["core-cls"].api.getString("error.command.missing"));
+	if (!client.commands.has(command)) return message.reply(apis["core-cls"].api.getString("core", "error.command.missing"));
 
 	try {
 		client.commands.get(command).execute(message, args, { client: client, apis: apis }); // lmfao
 	} catch (error) {
 		console.error(error);
-		message.reply(apis["core-cls"].api.getString("error.command.failed"));
+		message.reply(apis["core-cls"].api.getString("core", "error.command.failed"));
 	}
 	
 });
