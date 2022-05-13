@@ -10,26 +10,31 @@ function parseModuleName(moduleName) {
     }
 }
 module.exports = {
-    execute: async function(message, args) {
-        const config = require("../../../config.json"); // pee pee poo poo gugu gaga
-        if(!config.owners.includes(message.author.id)) return message.reply("You can't do that bro.");
+    execute: async function(message, args, utils) {
+        let cls = utils.apis["core-cls"].api;
+        const config = require("../../../config.json");
+        if(!config.owners.includes(message.author.id)) return message.reply(cls.getString("core", "error.permission"));
         const { installModule, loadModule } = require("../../index.js");
         // installing module...
         moduleName = parseModuleName(args[0])
         if (!moduleName) {
-            return message.reply("You seem to have pinged a Discord user, please supply a GitHub link if you were trying to use the @username/module format.")
+            return message.reply(cls.getString("core", "install.ping"))
         }
-        await message.reply("Installing module...");
+        await message.reply(cls.getString("core", "install.installing"));
         try {
             await installModule(moduleName);
             loadModule(moduleName, false);
-            message.reply("Module installed!"); //what's a permission check! just kidding
+            message.reply(cls.getString("core", "install.success"));
             config.enabledModules.push(moduleName)
             require("fs").writeFile(`${__dirname}/../../../config.json`, JSON.stringify(config, null, 4), function writeJSON(err) {
-                if (err) return console.log(err);
+                if (err) {
+                    utils.apis["core-error"].api.error(err);
+                    return console.log(err);
+                }
             });
         } catch (err) {
-            message.reply("Something went wrong during module installation.");
+            message.reply(cls.getString("core", "install.fail"));
+            utils.apis["core-error"].api.error(err); //copilot wrote this, dont trust it!
             console.log(err);
         }
     }

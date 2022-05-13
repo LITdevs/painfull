@@ -210,19 +210,25 @@ client.on('messageCreate', message => {
 	const args = message.content.slice(config.prefix.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
 
-	if (!client.commands.has(command)) return message.reply('that command does not exist!');
+	if (!client.commands.has(command)) return message.reply(apis["core-cls"].api.getString("error.command.missing"));
 
 	try {
 		client.commands.get(command).execute(message, args, { client: client, apis: apis }); // lmfao
 	} catch (error) {
 		console.error(error);
-		message.reply('there was an error trying to execute that command!');
+		message.reply(apis["core-cls"].api.getString("error.command.failed"));
 	}
 	
 });
 
 client.once('ready', () => {
 	spinner.succeed(`Connected to Discord as ${client.user.tag}!`);
+	if(!config.firstTimeSeen) {
+		config.firstTimeSeen = true
+		fs.writeFileSync(`${__dirname}/../config.json`, JSON.stringify(config, null, 4)); //er
+
+		bootDMs.push("**Welcome to Painfull!**\nIf you see this, then you have successfully configured your Painfull instance!\n\n**What now?**\nOut of the box, Painfull doesn't do much.\nYou can make it do new and exciting things by installing \"modules\", which contain new commands and plugins. You can even make your own!\nExplore modules here: https://example.com")
+	}
 	bootDMs.forEach(dm => {
 		config.owners.forEach(owner => {
 			client.users.fetch(owner).then(user => {
@@ -231,6 +237,7 @@ client.once('ready', () => {
 		})
 	});
 	console.log();
+	apis["core-cls"].init()
 });
 
 

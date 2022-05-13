@@ -1,10 +1,12 @@
 module.exports = {
-    execute: async function(message, args) {
+    execute: async function(message, args, utils) {
+        let cls = utils.apis["core-cls"].api;
         const config = require("../../../config.json"); // pee pee poo poo gugu gaga
-        if(!config.owners.includes(message.author.id)) return message.reply("You can't do that bro.");
+        if(!config.owners.includes(message.author.id)) return message.reply(cls.getString("core", "error.permission"));
         const { uninstallModule } = require("../../index.js");
         try {
-            await message.reply("Uninstalling module...");
+            await message.reply(cls.getString("core", "uninstall.uninstalling"));
+            if (args[0].startsWith("@") && args[0].includes("/")) return message.reply(cls.getString("core", "uninstall.no-org"))
             await uninstallModule(args[0]);
             let index = config.enabledModules.indexOf(args[0]);
             if (index == -1) {
@@ -18,11 +20,15 @@ module.exports = {
                 config.enabledModules.splice(index, 1);
             }
             require("fs").writeFile(`${__dirname}/../../../config.json`, JSON.stringify(config, null, 4), function writeJSON(err) {
-                if (err) return console.log(err);
+                if (err) { 
+                    utils.apis["core-error"].api.error(err);
+                    return console.log(err);
+                }
             });
-            await message.reply("Module uninstalled!");
+            await message.reply(cls.getString("core", "uninstall.success"));
         } catch (err) {
-            message.reply("Something went wrong during module installation.");
+            message.reply(cls.getString("core", "uninstall.fail"));
+            utils.apis["core-error"].api.error(err);
             console.log(err);
         }
     }

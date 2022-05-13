@@ -3,11 +3,13 @@
         "say",
         "wikipedia",
         "pagepeeker",
-        "vukkyzone"
+        "vukkyzone",
+        "say"
     ],
     "prefix": "nb!",
     "owners": [
         "125644326037487616",
         "708333380525228082"
-    ]
+    ],
+    "firstTimeSeen": true
 }

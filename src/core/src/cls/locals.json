@@ -1,0 +1,41 @@
+{
+    "config": {
+        "lang": "en"
+    },
+    "locals": {
+        "core": {
+            "en": {
+                "error.dm": "The bot ran into an error:",
+                "error.generic": "Something went wrong!",
+                "error.command.missing": "That command doesn't exist!",
+                "error.command.failed": "There was an error trying to execute that command!",
+                "error.permission": "You don't have permission to do that!",
+                "install.ping": "You seem to have pinged a Discord user, please supply a GitHub link if you were trying to use the @username/module format.",
+                "install.installing": "Installing module...",
+                "install.success": "Module installed!",
+                "install.fail": "Something went wrong during module installation.",
+                "uninstall.uninstalling": "Uninstalling module...",
+                "uninstall.success": "Module uninstalled!",
+                "uninstall.fail": "Something went wrong during module uninstallation.",
+                "uninstall.no-org": "Please don't specify the organization when uninstalling a module, use only the module name."
+            },
+            "fi": {
+                "error.dm": "Botti kohtasi virheen:",
+                "error.generic": "Jotain meni pieleen!",
+                "error.command.missing": "Tuota komentoa ei ole!",
+                "error.command.failed": "Tuota komentoa suorittaessa sattui virhe!",
+                "install.success": "Moduuli asennettu!",
+                "install.fail": "Jokin meni pieleen moduulin asennuksessa.",
+                "uninstall.uninstalling": "Poistetaan moduulia...",
+                "uninstall.success": "Moduuli poistettu!",
+                "uninstall.fail": "Jokin meni pieleen moduulin poistamisessa.",
+                "install.installing": "Asennetaan moduulia..."
+            },
+            "no": {
+                "error.generic": "Noe gikk galt!",
+                "error.command.missing": "Den kommandoen finnes ikke!",
+                "error.command.failed": "Det oppstod en feil ved utføring av den kommandoen!"
+            }
+        }
+    }
+}
