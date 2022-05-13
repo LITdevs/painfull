@@ -2,8 +2,6 @@
     "enabledModules": [
         "say",
         "wikipedia",
-        "say",
-        "vukkyzone",
         "vukkyzone",
         "pagepeeker"
     ],
