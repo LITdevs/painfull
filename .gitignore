@@ -1,4 +1,6 @@
 src/modules
+config.json
+src/core/src/cls/locals.json
 # Logs
 logs
 *.log
