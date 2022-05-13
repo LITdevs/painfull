@@ -4,9 +4,11 @@
     "author": "LIT Devs",
     "entrypoints": {
         "install": "src/install.js",
-        "uninstall": "src/uninstall.js"
+        "uninstall": "src/uninstall.js",
+        "error": "src/error.js"
     },
     "apis": {
-        "error": "src/errorapi.js"
+        "error": "src/errorapi.js",
+        "cls": "src/cls/cls.js"
     }
 }
