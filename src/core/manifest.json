@@ -4,8 +4,6 @@
     "author": "LIT Devs",
     "entrypoints": {
         "install": "src/install.js",
-        "test": "src/test.js",
-        "permtest": "src/permtest.js",
         "uninstall": "src/uninstall.js"
     },
     "apis": {
