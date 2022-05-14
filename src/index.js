@@ -15,7 +15,10 @@ console.clear();
 console.log(chalk.greenBright("Painfull"));
 var modulesToLoad = []
 let apis = {}
+let botRunning = false;
+let rebootPending = false;
 let clsImportQueue = [];
+
 async function installModule(moduleName) {
 	//Check for installed module, and validate existance of all required files (All entrypoints, apis along with package.json and manifest.json)
 	if (!fs.existsSync(`${__dirname}/modules/`)){
@@ -46,6 +49,8 @@ async function installModule(moduleName) {
 				let moduleLocals = JSON.parse(fs.readFileSync(`${moduleFolder}/${manifest.locals}`))
 				clsImportQueue.push(moduleLocals)
 			}
+
+			if(botRunning && manifest.apis) rebootPending = true;
 
 		} catch (error) {
 			console.log(error)
@@ -216,7 +221,6 @@ config.enabledModules.forEach(async module =>  {
 spinner = ora("Connecting to Discord...").start();
 
 client.on('messageCreate', message => {
-
 	if(message.content == "please give me the error") {
 		bootDMs.forEach(dm => {
 			config.owners.forEach(owner => {
@@ -232,14 +236,14 @@ client.on('messageCreate', message => {
 	} //adding new commands t;he old school way
 
 	if (!message.content.startsWith(config.prefix) || message.author.bot) return;
-
+	if (rebootPending) return message.channel.send("Bot is rebooting, please try again after a while...");
 	const args = message.content.slice(config.prefix.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
 
 	if (!client.commands.has(command)) return message.reply(apis["core-cls"].api.getString("core", "error.command.missing"));
 
 	try {
-		client.commands.get(command).execute(message, args, { client: client, apis: apis, CLSimportPending: CLSimportPending });
+		client.commands.get(command).execute(message, args, { client: client, apis: apis, CLSimportPending: CLSimportPending, reboot: reboot });
 	} catch (error) {
 		console.error(error);
 		message.reply(apis["core-cls"].api.getString("core", "error.command.failed"));
@@ -262,20 +266,52 @@ client.once('ready', () => {
 			})
 		})
 	});
-	console.log();
-	apis["core-cls"].init();
+	spinner = ora("Initializing APIs...").start();
+	Object.keys(apis).forEach(api => {
+		if(apis[api].initAPIs) {
+			apis[api].initAPIs({client, apis, reboot})
+		}
+	})
+	spinner.succeed("APIs initialized!");
+	botRunning = true;
+	spinner = ora(chalk.greenBright("[CLS]") + " Importing pending localization...").start();
 	CLSimportPending();
+	spinner.succeed(chalk.greenBright("[CLS]") + " Localization imported!");
+	console.log()
 });
 
 function CLSimportPending() {
 	clsImportQueue.forEach(locals => {
 		apis["core-cls"].api.importModule(locals)
 	})
+	if (rebootPending) reboot()
+}
+
+function reboot() {
+	Object.keys(apis).forEach(api => {
+		if(apis[api].preShutdown) {
+			apis[api].preShutdown()
+		}
+	})
+	setTimeout(() => {
+		try {
+			let pm2 = require("pm2") // riiiiiiiight
+			pm2.connect(function(err) {
+				if (err) apis["core-error"].api.error(err);
+				pm2.restart(process.pid);
+				setTimeout(() => {
+					// https://media.discordapp.net/attachments/952127072057327686/974994441616121856/nb-125644326037487616.png?width=696&height=671
+					apis["core-error"].api.inform(apis["core-cls"].api.getString("core", "reboot.failed"))
+				})
+			})
+		} catch(e) {
+			// https://media.discordapp.net/attachments/952127072057327686/974994441616121856/nb-125644326037487616.png?width=696&height=671
+			apis["core-error"].api.inform(apis["core-cls"].api.getString("core", "reboot.failed"))
+		}
+	}, 1000)
 }
 
 client.login(process.env.BOT_TOKEN);
-
-apis["core-error"].init(client)
 
 module.exports = {
     installModule,

@@ -1,13 +1,11 @@
-let config = require('../../../../config.json');
-const errorAPI = require('../errorapi.js').api
+let errorAPI 
 let clsData
 const fs = require("fs")
 const chalk = require('chalk')
 let clsActive = true // Used by the error api to know if localization should be used. If the CLS is in a disabled state it will need to communicate to the user anyway.
 
-// init runs when the bot starts
-function init() { 
-	// checking for the localization file
+function initAPIs(utils) {
+	errorAPI = utils.apis["core-error"].api
 	if (fs.existsSync(`${__dirname}/locals.json`)) {
 		clsData = JSON.parse(fs.readFileSync(`${__dirname}/locals.json`).toString())
 	} else {
@@ -45,12 +43,12 @@ function setLang(lang) {
 
 // Imports localization from a module
 function importModule(moduleLocals) {
-	console.log(`${chalk.greenBright("[CLS]")} Importing localization from ${moduleLocals.moduleName}`)
+	console.log(`${chalk.greenBright("[CLS]")} ${getString("core", "cls.import").replace("{0}", moduleLocals.moduleName)}`)
 	clsData.locals[moduleLocals.moduleName] = moduleLocals.locals
 	fs.writeFileSync(`${__dirname}/locals.json`, JSON.stringify(clsData, null, 4))
 }
 
 module.exports = {
 	api: {getString, setLang, importModule},
-	init
+	initAPIs
 }

@@ -9,6 +9,7 @@
                 "error.generic": "Something went wrong!",
                 "error.command.missing": "That command doesn't exist!",
                 "error.command.failed": "There was an error trying to execute that command!",
+                "error.inform": " ",
                 "error.permission": "You don't have permission to do that!",
                 "install.ping": "You seem to have pinged a Discord user, please supply a GitHub link if you were trying to use the @username/module format.",
                 "install.installing": "Installing module...",
@@ -18,7 +19,10 @@
                 "uninstall.success": "Module uninstalled!",
                 "uninstall.fail": "Something went wrong during module uninstallation.",
                 "uninstall.no-org": "Please don't specify the organization when uninstalling a module, use only the module name.",
-                "lang.success": "Language changed to {0}!"
+                "lang.success": "Language changed to {0}!",
+                "cls.import": "Importing localization from {0}",
+                "reboot.generic": "Rebooting...",
+                "reboot.failed": "Automatic reboot failed. Reboot me manually!"
             },
             "fi": {
                 "error.dm": "Botti kohtasi virheen:",
@@ -36,6 +40,25 @@
                 "error.generic": "Noe gikk galt!",
                 "error.command.missing": "Den kommandoen finnes ikke!",
                 "error.command.failed": "Det oppstod en feil ved utføring av den kommandoen!"
+            }
+        },
+        "vukkyzone": {
+            "en": {
+                "intro": "**Welcome to the Vukky Zone!** (started by <@{0}>)\nReact with ✨ to join the Vukky Zone, or 💥 to close it so no one can enter it anymore.",
+                "start": "🤔 Something very bad is happening to the Vukky Zone...\nReact with ✨ to join.",
+                "shake": "😮 The Vukky Zone suddenly started shaking...\nReact with ✨ to join.",
+                "closed": "😬 The entrance to the Vukky Zone was suddenly closed!",
+                "empty": "😶 Not much happened, because no one decided to join.",
+                "explode": "💥 **Boom!**\nThe Vukky Zone was blown up!\n{0} people died inside it, because they decided to join.",
+                "covid": "🦠 **cough cough**\nThe Vukky Zone was closed due to COVID-19!\n{0} people got a severe case and died...",
+                "anvil": "🔨 **C R A S H**\nAn anvil suddenly fell down and killed {0} people inside the Vukky Zone.",
+                "goose": "🦆 **HONK**\nA wild goose appeared!\n{0} people were scared to death."
+            }
+        },
+        "pagepeeker": {
+            "en": {
+                "wait": "Here's a screenshot of that website! It'll take a few seconds to load.",
+                "noargs": "Please specify the website you want to take a screenshot of."
             }
         }
     }

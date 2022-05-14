@@ -6,7 +6,8 @@
         "install": "src/install.js",
         "uninstall": "src/uninstall.js",
         "error": "src/error.js",
-        "lang": "src/cls/lang.js"
+        "lang": "src/cls/lang.js",
+        "reboot": "src/reboot.js"
     },
     "apis": {
         "error": "src/errorapi.js",
