@@ -243,7 +243,7 @@ client.on('messageCreate', message => {
 	if (!client.commands.has(command)) return message.reply(apis["core-cls"].api.getString("core", "error.command.missing"));
 
 	try {
-		client.commands.get(command).execute(message, args, { client: client, apis: apis, CLSimportPending: CLSimportPending, reboot: reboot });
+		client.commands.get(command).execute(message, args, { client: client, apis: apis, CLSimportPending: CLSimportPending, reboot: reboot, config: config });
 	} catch (error) {
 		console.error(error);
 		message.reply(apis["core-cls"].api.getString("core", "error.command.failed"));
@@ -269,7 +269,7 @@ client.once('ready', () => {
 	spinner = ora("Initializing APIs...").start();
 	Object.keys(apis).forEach(api => {
 		if(apis[api].initAPIs) {
-			apis[api].initAPIs({client, apis, reboot})
+			apis[api].initAPIs({client, apis, reboot, config})
 		}
 	})
 	spinner.succeed("APIs initialized!");

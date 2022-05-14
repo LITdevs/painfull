@@ -60,6 +60,11 @@
                 "wait": "Here's a screenshot of that website! It'll take a few seconds to load.",
                 "noargs": "Please specify the website you want to take a screenshot of."
             }
+        },
+        "ccm": {
+            "en": {
+                "usage": "you need arguments dipshit fartface"
+            }
         }
     }
 }
