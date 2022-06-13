@@ -193,10 +193,12 @@ function loadModule(moduleName, isCore) {
 function uninstallModule(moduleName) {
 	let moduleFolder = `${__dirname}/modules/${moduleName}`
 	let moduleManifest = require(`${__dirname}/modules/${moduleName}/manifest.json`)
-	Object.entries(moduleManifest.entrypoints).forEach(entrypoint => {
-		let [commandName, _commandPath] = entrypoint;
-		client.commands.delete(commandName);
-	});
+	if (moduleManifest.entrypoints) {
+		Object.entries(moduleManifest.entrypoints).forEach(entrypoint => {
+			let [commandName, _commandPath] = entrypoint;
+			client.commands.delete(commandName);
+		});
+	}
 	if(fs.existsSync(moduleFolder)) {
 		fs.rmSync(moduleFolder, { recursive: true })
 	}
