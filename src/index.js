@@ -161,29 +161,31 @@ function loadModule(moduleName, isCore) {
 			apis[`${parsedModuleName}-${apiName}`] = apif;
 		});
 	}
-	Object.entries(moduleManifest.entrypoints).forEach(entrypoint => {
-		let [commandName, commandPath] = entrypoint;
-		let command
-		if (!isCore) command = require(`${__dirname}/modules/${parsedModuleName}/${commandPath}`);
-		if (isCore) command = require(`${__dirname}/core/${commandPath}`);
-		let validEvents = ["apiRequest", "apiResponse", "applicationCommandCreate", "applicationCommandDelete", "applicationCommandUpdate", "channelCreate", "channelDelete", "channelPinsUpdate", "channelUpdate", "debug", "emojiCreate", "emojiDelete", "emojiUpdate", "error", "guildBanAdd", "guildBanRemove", "guildCreate", "guildDelete", "guildIntegrationsUpdate", "guildMemberAdd", "guildMemberAvailable", "guildMemberRemove", "guildMembersChunk", "guildMemberUpdate", "guildScheduledEventCreate", "guildScheduledEventDelete", "guildScheduledEventUpdate", "guildScheduledEventUserAdd", "guildScheduledEventUserRemove", "guildUnavailable", "guildUpdate", "interaction", "interactionCreate", "invalidated", "invalidRequestWarning", "inviteCreate", "inviteDelete", "message", "messageCreate", "messageDelete", "messageDeleteBulk", "messageReactionAdd", "messageReactionRemove", "messageReactionRemoveAll", "messageReactionRemoveEmoji", "messageUpdate", "presenceUpdate", "rateLimit", "ready", "roleCreate", "roleDelete", "roleUpdate", "shardDisconnect", "shardError", "shardReady", "shardReconnecting", "shardResume", "stageInstanceCreate", "stageInstanceDelete", "stageInstanceUpdate", "stickerCreate", "stickerDelete", "stickerUpdate", "threadCreate", "threadDelete", "threadListSync", "threadMembersUpdate", "threadMemberUpdate", "threadUpdate", "typingStart", "userUpdate", "voiceStateUpdate", "warn", "webhookUpdate"]
-		if(command.registerEventHandlers) {
-			let addedHandlers = []
-			command.registerEventHandlers(function (eventName, handler) {
-				if(!validEvents.includes(eventName)) bootDMs.push("invalid event handler in module:" + moduleName)
-				if(!validEvents.includes(eventName)) return
-				if(addedHandlers.includes(eventName)) bootDMs.push("duplicate event handler in module:" + moduleName)
-				if(addedHandlers.includes(eventName)) return
-				if(!moduleManifest.eventHandlers) bootDMs.push("undeclared event handler in module:" + moduleName)
-				if(!moduleManifest.eventHandlers) return
-				if(!moduleManifest.eventHandlers.includes(eventName)) bootDMs.push("undeclared event handler in module:" + moduleName)
-				if(!moduleManifest.eventHandlers.includes(eventName)) return
-				addedHandlers.push(eventName)
-				client.on(eventName, handler)
-			})
-		}
-		client.commands.set(commandName, command);
-	});
+	if (moduleManifest.entrypoints) {
+		Object.entries(moduleManifest.entrypoints).forEach(entrypoint => {
+			let [commandName, commandPath] = entrypoint;
+			let command
+			if (!isCore) command = require(`${__dirname}/modules/${parsedModuleName}/${commandPath}`);
+			if (isCore) command = require(`${__dirname}/core/${commandPath}`);
+			let validEvents = ["apiRequest", "apiResponse", "applicationCommandCreate", "applicationCommandDelete", "applicationCommandUpdate", "channelCreate", "channelDelete", "channelPinsUpdate", "channelUpdate", "debug", "emojiCreate", "emojiDelete", "emojiUpdate", "error", "guildBanAdd", "guildBanRemove", "guildCreate", "guildDelete", "guildIntegrationsUpdate", "guildMemberAdd", "guildMemberAvailable", "guildMemberRemove", "guildMembersChunk", "guildMemberUpdate", "guildScheduledEventCreate", "guildScheduledEventDelete", "guildScheduledEventUpdate", "guildScheduledEventUserAdd", "guildScheduledEventUserRemove", "guildUnavailable", "guildUpdate", "interaction", "interactionCreate", "invalidated", "invalidRequestWarning", "inviteCreate", "inviteDelete", "message", "messageCreate", "messageDelete", "messageDeleteBulk", "messageReactionAdd", "messageReactionRemove", "messageReactionRemoveAll", "messageReactionRemoveEmoji", "messageUpdate", "presenceUpdate", "rateLimit", "ready", "roleCreate", "roleDelete", "roleUpdate", "shardDisconnect", "shardError", "shardReady", "shardReconnecting", "shardResume", "stageInstanceCreate", "stageInstanceDelete", "stageInstanceUpdate", "stickerCreate", "stickerDelete", "stickerUpdate", "threadCreate", "threadDelete", "threadListSync", "threadMembersUpdate", "threadMemberUpdate", "threadUpdate", "typingStart", "userUpdate", "voiceStateUpdate", "warn", "webhookUpdate"]
+			if(command.registerEventHandlers) {
+				let addedHandlers = []
+				command.registerEventHandlers(function (eventName, handler) {
+					if(!validEvents.includes(eventName)) bootDMs.push("invalid event handler in module:" + moduleName)
+					if(!validEvents.includes(eventName)) return
+					if(addedHandlers.includes(eventName)) bootDMs.push("duplicate event handler in module:" + moduleName)
+					if(addedHandlers.includes(eventName)) return
+					if(!moduleManifest.eventHandlers) bootDMs.push("undeclared event handler in module:" + moduleName)
+					if(!moduleManifest.eventHandlers) return
+					if(!moduleManifest.eventHandlers.includes(eventName)) bootDMs.push("undeclared event handler in module:" + moduleName)
+					if(!moduleManifest.eventHandlers.includes(eventName)) return
+					addedHandlers.push(eventName)
+					client.on(eventName, handler)
+				})
+			}
+			client.commands.set(commandName, command);
+		});
+	}
 	
 
 }
