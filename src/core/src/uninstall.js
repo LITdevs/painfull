@@ -3,10 +3,11 @@ module.exports = {
         let cls = utils.apis["core-cls"].api;
         const config = require("../../../config.json"); // pee pee poo poo gugu gaga
         if(!config.owners.includes(message.author.id)) return message.reply(cls.getString("core", "error.permission"));
+        if (args[0].startsWith("@") && args[0].includes("/")) return message.reply(cls.getString("core", "uninstall.no-org"))
+        if(!config.enabledModules.includes(moduleName)) return message.reply(cls.getString("core", "uninstall.fail.exists"));
         const { uninstallModule } = require("../../index.js");
         try {
             await message.reply(cls.getString("core", "uninstall.uninstalling"));
-            if (args[0].startsWith("@") && args[0].includes("/")) return message.reply(cls.getString("core", "uninstall.no-org"))
             await uninstallModule(args[0]);
             let index = config.enabledModules.indexOf(args[0]);
             if (index == -1) {

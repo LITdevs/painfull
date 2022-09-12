@@ -17,6 +17,7 @@ module.exports = {
         const { installModule, loadModule } = require("../../index.js");
         // installing module...
         moduleName = parseModuleName(args[0])
+        if(config.enabledModules.includes(moduleName)) return message.reply(cls.getString("core", "install.fail.exists"));
         if (!moduleName) {
             return message.reply(cls.getString("core", "install.ping"))
         }

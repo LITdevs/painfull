@@ -15,9 +15,11 @@
                 "install.installing": "Installing module...",
                 "install.success": "Module installed!",
                 "install.fail": "Something went wrong during module installation.",
+                "install.fail.exists": "That module is already installed.",
                 "uninstall.uninstalling": "Uninstalling module...",
                 "uninstall.success": "Module uninstalled!",
                 "uninstall.fail": "Something went wrong during module uninstallation.",
+                "uninstall.fail.exists": "That module is not installed.",
                 "uninstall.no-org": "Please don't specify the organization when uninstalling a module, use only the module name.",
                 "lang.success": "Language changed to {0}!",
                 "cls.import": "Importing localization from {0}",
@@ -37,9 +39,7 @@
                 "install.installing": "Asennetaan moduulia..."
             },
             "no": {
-                "error.generic": "Noe gikk galt!",
-                "error.command.missing": "Den kommandoen finnes ikke!",
-                "error.command.failed": "Det oppstod en feil ved utføring av den kommandoen!"
+                "error.generic": "Noe gikk galt!"
             }
         },
         "vukkyzone": {
