@@ -5,9 +5,11 @@
         "vukkyzone",
         "pagepeeker",
         "animalposting",
-        "ccm"
+        "ccm",
+        "@litdevs/litdevs-logo-api",
+        "@litdevs/bannerfest"
     ],
-    "prefix": "nb!",
+    "prefix": "n!",
     "owners": [
         "125644326037487616",
         "708333380525228082"
