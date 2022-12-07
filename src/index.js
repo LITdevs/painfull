@@ -311,7 +311,8 @@ function reboot() {
 			})
 		} catch(e) {
 			// https://media.discordapp.net/attachments/952127072057327686/974994441616121856/nb-125644326037487616.png?width=696&height=671
-			apis["core-error"].api.inform(apis["core-cls"].api.getString("core", "reboot.failed"))
+			//apis["core-error"].api.inform(apis["core-cls"].api.getString("core", "reboot.failed"))
+			process.exit(1) // just fucking die and assume the user is using pm2/similar
 		}
 	}, 1000)
 }
