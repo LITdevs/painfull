@@ -4,7 +4,7 @@ module.exports = {
         const config = require("../../../config.json"); // pee pee poo poo gugu gaga
         if(!config.owners.includes(message.author.id)) return message.reply(cls.getString("core", "error.permission"));
         if (args[0].startsWith("@") && args[0].includes("/")) return message.reply(cls.getString("core", "uninstall.no-org"))
-        if(!config.enabledModules.includes(args[0])) return message.reply(cls.getString("core", "uninstall.fail.exists"));
+        // dont work -- if(!config.enabledModules.includes(args[0])) return message.reply(cls.getString("core", "uninstall.fail.exists"));
         const { uninstallModule } = require("../../index.js");
         try {
             await message.reply(cls.getString("core", "uninstall.uninstalling"));
